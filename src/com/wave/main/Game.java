@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
 public class Game extends Canvas implements Runnable {
 
@@ -11,13 +12,26 @@ public class Game extends Canvas implements Runnable {
 	public static final int WIDTH = 640, HEIGHT = WIDTH / 12 * 9;	//16 by 9 ratio
 	private Thread thread;
 	private boolean running = false;	//true if the tread is running
-
+	
+	private Random r;
+	private Handler handler;
+	
 	public static void main(String[] args) {
 		new Game();
 	}
 	
 	public Game() {
+		handler = new Handler();	//always on top to avoid random null pointer exception
+		
+		this.addKeyListener(new KeyInput(handler));
+		
 		new Window(WIDTH, HEIGHT, "Wave Game!", this);
+		
+		r = new Random();
+		
+		handler.addObject(new Player(WIDTH/2-32, HEIGHT/2-32, ID.Player));
+		
+	
 	}
 	
 	public synchronized void start() {
@@ -79,7 +93,7 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	private void tick() {
-		
+		handler.tick();
 	}
 	
 	private void render() {
@@ -92,8 +106,10 @@ public class Game extends Canvas implements Runnable {
 		
 		Graphics g = bs.getDrawGraphics();
 		
-		g.setColor(Color.green);
+		g.setColor(Color.black);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
+		
+		handler.render(g);
 		
 		g.dispose();
 		bs.show();
