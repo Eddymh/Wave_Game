@@ -17,13 +17,18 @@ public class Player extends GameObject{
 		x += velX;
 		y += velY;
 		
+		/*
+		if(x <= 0 || x >= Game.WIDTH - 16) velX *= -1;
+		if(y <= 0 || y >= Game.HEIGHT - 32) velY *= -1;*/
+		x = Game.clamp(x, 0, Game.WIDTH - 36);
+		y = Game.clamp(y, 0, Game.HEIGHT - 64);
 	}
 
 	public void render(Graphics g) {
-		if (id == ID.Player) g.setColor(Color.white);
-		if (id == ID.Player2) g.setColor(Color.red);
+		g.setColor(Color.white);
 		g.fillRect(x,  y,  32,  32);
 	}
+	
 	
 	
 }
