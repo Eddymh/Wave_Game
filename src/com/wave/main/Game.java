@@ -16,6 +16,7 @@ public class Game extends Canvas implements Runnable {
 	private Random r;
 	private Handler handler;
 	private HUD hud;
+	private Spawn spawner;
 	
 	public static void main(String[] args) {
 		new Game();
@@ -24,18 +25,18 @@ public class Game extends Canvas implements Runnable {
 	public Game() {
 		
 		handler = new Handler();	//always on top to avoid random null pointer exception
-		
 		this.addKeyListener(new KeyInput(handler));
 		
 		new Window(WIDTH, HEIGHT, "Wave Game!", this);
 		
 		hud = new HUD();
-		
+		spawner = new Spawn(handler, hud);
 		r = new Random();
 		
 		handler.addObject(new Player(WIDTH/2-32, HEIGHT/2-32, ID.Player, handler));
-		handler.addObject(new BasicEnemy(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.BasicEnemy, handler));
-		
+		//handler.addObject(new BasicEnemy(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.BasicEnemy, handler));
+		handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+
 	}
 	
 	public synchronized void start() {
@@ -100,6 +101,7 @@ public class Game extends Canvas implements Runnable {
 	private void tick() {
 		handler.tick();
 		hud.tick();
+		spawner.tick();
 	}
 	
 	private void render() {
